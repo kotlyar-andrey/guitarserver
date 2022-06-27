@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'markdownx',
     'data',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -100,10 +101,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+
+# https://docs.djangop# Default primary key field typeroject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'accounts.User'
 
 REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
