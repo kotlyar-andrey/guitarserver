@@ -18,6 +18,7 @@ class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
+        extra_fields.setdefault('is_premium', False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
@@ -69,7 +70,7 @@ class UserSettings(models.Model):
 
 
 class UserProgress(models.Model):
-    user = models.OneToOneField(User, verbose_name='Пользатель', on_delete=models.CASCADE)
+    user = models.OneToOneField(User, verbose_name='Пользатель', related_name='progress', on_delete=models.CASCADE)
     favorite_lessons = models.ManyToManyField(Lesson, related_name="favorite_lessons",
                                               verbose_name="Избранные уроки и разборы", blank=True)
     complete_lessons = models.ManyToManyField(Lesson, related_name="complete_lessons",
