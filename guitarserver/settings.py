@@ -102,6 +102,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_URL = 'media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+
 
 # https://docs.djangop# Default primary key field typeroject.com/en/4.0/ref/settings/#default-auto-field
 
