@@ -29,7 +29,7 @@ class Lesson(models.Model):
     Главная модель данных для уроков и разборов.
     lesson_type отпределяет, урок это или разбор.
     """
-    lesson_type = models.IntegerField("Вид урока", choices=LESSON_TYPES)
+    lesson_type = models.IntegerField("Вид урока", choices=LESSON_TYPES, default=0)
     number = models.IntegerField("Номер")
     title = models.CharField("Название", max_length=200)
     video = models.URLField("Видео", max_length=200)
@@ -67,14 +67,13 @@ class Chord(models.Model):
             res += f'_{lad.string}{lad.lad}'
         return res
 
-
     class Meta:
         verbose_name = "Аккорд"
         verbose_name_plural = "Аккорды"
         ordering = ("note", "order")
 
     def __str__(self):
-        return self.title if not self.bare else f'{self.title} bare'
+        return (self.title if not self.bare else f'{self.title} bare') + f'({self.code})'
 
 
 class StringsInfo(models.Model):
@@ -122,7 +121,7 @@ class Beat(models.Model):
     code = models.CharField("Кодовое название", help_text="Позволяет указать, для какого именно урока этот бой",
                             max_length=20, blank=True)
     inscription = models.CharField("Надпись", max_length=100, blank=True, null=True)
-    duration = models.IntegerField("Длительность", choices=NOTE_DURATIONS)
+    duration = models.IntegerField("Длительность", choices=NOTE_DURATIONS, default=2)
 
     class Meta:
         verbose_name = "Интерактивный ритмический рисунок"
@@ -147,7 +146,7 @@ class Strike(models.Model):
         return self.strike
 
 
-class Song(models.Model): # TODO: rename to Song
+class Song(models.Model):
     """
     Основной класс для песни, не зависимо от того, урок это или разбор.
     Содержит текст с markdown разметкой для отображения аккордов
