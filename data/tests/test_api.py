@@ -45,7 +45,7 @@ class LessonTests(APITestCase):
         self.assertIn('title', response.data)
         self.assertIn('video', response.data)
         self.assertIn('intro', response.data)
-        self.assertIn('sounds', response.data)
+        self.assertIn('songs', response.data)
         self.assertIn('additions', response.data)
 
     def test_get_how_to_plays(self):
@@ -66,7 +66,7 @@ class LessonTests(APITestCase):
         self.assertIn('title', response.data)
         self.assertIn('video', response.data)
         self.assertIn('intro', response.data)
-        self.assertIn('sounds', response.data)
+        self.assertIn('songs', response.data)
         self.assertIn('additions', response.data)
         self.assertIn('start_lesson', response.data)
         self.assertIn('rating', response.data)

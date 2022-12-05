@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from . models import Lesson, Accord, UpdateInfo
-from . serializers import LessonSerializer, AccordSerializer
+from . models import Lesson, Chord, UpdateInfo
+from . serializers import LessonSerializer, ChordSerializer
 
 
 class LessonsList(generics.ListAPIView):
@@ -29,12 +29,12 @@ class HowToPlayView(generics.RetrieveAPIView):
 
 
 class AccordsList(generics.ListAPIView):
-    queryset = Accord.objects.all()
-    serializer_class = AccordSerializer
+    queryset = Chord.objects.all()
+    serializer_class = ChordSerializer
     permission_classes = (AllowAny,)
 
 
 class AccordView(generics.RetrieveAPIView):
-    queryset = Accord.objects.all()
-    serializer_class = AccordSerializer
+    queryset = Chord.objects.all()
+    serializer_class = ChordSerializer
     permission_classes = (AllowAny,)

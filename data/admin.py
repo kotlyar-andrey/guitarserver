@@ -1,7 +1,7 @@
 from django.contrib import admin
 from markdownx.admin import MarkdownxModelAdmin
-from .models import Scheme, Lesson, Sound, Addition, UpdateInfo,\
-    Accord, StringsInfo
+from .models import Scheme, Lesson, Song, Addition, UpdateInfo,\
+    Chord, StringsInfo, Strike, Beat
 
 
 class StringsInfoInline(admin.TabularInline):
@@ -9,7 +9,7 @@ class StringsInfoInline(admin.TabularInline):
     extra = 1
 
 
-@admin.register(Accord)
+@admin.register(Chord)
 class AccordAdmin(admin.ModelAdmin):
     list_display = ('title', 'muz_title', 'note', 'order', 'bare')
     list_editable = ('muz_title', 'order', 'bare')
@@ -17,14 +17,25 @@ class AccordAdmin(admin.ModelAdmin):
     inlines = [StringsInfoInline, ]
 
 
+class StrikeInline(admin.TabularInline):
+    model = Strike
+    extra = 1
+
+
+@admin.register(Beat)
+class BeatAdmin(admin.ModelAdmin):
+    list_display = ("inscription", )
+    inlines = [StrikeInline, ]
+
+
 @admin.register(Scheme)
 class LessonSchemeAdmin(admin.ModelAdmin):
-    list_display = ('code', 'inscription', 'image')
+    list_display = ('inscription', 'image')
 
 
-@admin.register(Sound)
-class SoundAdmin(MarkdownxModelAdmin):
-    filter_horizontal = ('accords', 'schemes', 'accords')
+@admin.register(Song)
+class SongAdmin(MarkdownxModelAdmin):
+    filter_horizontal = ('chords', 'schemes', 'beats')
     list_display = ('title',)
 
 

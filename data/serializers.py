@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from . models import Lesson, Sound, Addition, Accord, StringsInfo, Scheme
+from . models import Lesson, Song, Addition, Chord, StringsInfo, Scheme, Strike, Beat
 
 
 class StringInfoSerializer(serializers.ModelSerializer):
@@ -9,27 +9,36 @@ class StringInfoSerializer(serializers.ModelSerializer):
         fields = ('pk', 'string', 'lad', 'number')
 
 
-class AccordSerializer(serializers.ModelSerializer):
+class ChordSerializer(serializers.ModelSerializer):
     lads = StringInfoSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Accord
-        fields = ('pk', 'title', 'muz_title', 'note', 'order', 'start_lad', 'bare', 'lads')
+        model = Chord
+        fields = ('pk', 'title', 'muz_title', 'note', 'order', 'start_lad', 'bare', 'lads', 'code')
+
+
+class BeatSerializer(serializers.ModelSerializer):
+    strikes = serializers.StringRelatedField(many=True)
+
+    class Meta:
+        model = Beat
+        fields = ('pk', 'inscription', 'duration', 'strikes',)
 
 
 class SchemeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Scheme
-        fields = ('pk', 'title', 'name', 'image')
+        fields = ('pk', 'inscription', 'image')
 
 
-class SoundSerializer(serializers.ModelSerializer):
-    accords = AccordSerializer(many=True, read_only=True)
+class SongSerializer(serializers.ModelSerializer):
+    chords = ChordSerializer(many=True, read_only=True)
     schemes = SchemeSerializer(many=True, read_only=True)
+    beats = BeatSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Sound
-        fields = ('pk', 'title', 'accords', 'schemes', 'text', 'metronome')
+        model = Song
+        fields = ('pk', 'title', 'chords', 'schemes', 'beats', 'text', 'metronome')
 
 
 class AdditionSerializer(serializers.ModelSerializer):
@@ -39,10 +48,10 @@ class AdditionSerializer(serializers.ModelSerializer):
 
 
 class LessonSerializer(serializers.ModelSerializer):
-    sounds = SoundSerializer(many=True, read_only=True)
+    songs = SongSerializer(many=True, read_only=True)
     additions = AdditionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Lesson
         fields = ('pk', 'lesson_type', 'number', 'title', 'video',
-                  'intro', 'sounds', 'additions', 'start_lesson', 'rating')
+                  'intro', 'songs', 'additions', 'start_lesson', 'rating')

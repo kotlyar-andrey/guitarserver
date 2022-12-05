@@ -7,6 +7,22 @@ LESSON_TYPES = (
     (1, 'Разбор'),
 )
 
+NOTE_DURATIONS = (
+    (0, '1'),
+    (1, '1/2'),
+    (2, '1/4'),
+    (3, '1/8'),
+    (4, '1/16'),
+    (5, '1/32'),
+)
+
+ALLOWED_STRIKES = (
+    ('down', 'Вниз'),
+    ('up', 'Вверх'),
+    ('x', 'Щелчок'),
+    ('pause', 'Пауза')
+)
+
 
 class Lesson(models.Model):
     """
@@ -33,7 +49,7 @@ class Lesson(models.Model):
             return f"Разбор № {self.number}. {self.title}"
 
 
-class Accord(models.Model):
+class Chord(models.Model):
     """
     Основная информация об аккорде
     """
@@ -43,6 +59,14 @@ class Accord(models.Model):
     order = models.IntegerField("Номер для сортировки", default=1)
     start_lad = models.IntegerField("С какого лада начинается", default=1)
     bare = models.BooleanField("Есть баре?", default=False)
+
+    @property
+    def code(self):
+        res = self.title
+        for lad in self.lads.all():
+            res += f'_{lad.string}{lad.lad}'
+        return res
+
 
     class Meta:
         verbose_name = "Аккорд"
@@ -58,7 +82,7 @@ class StringsInfo(models.Model):
     Информация о том, какая струна на каком ладу и каким польцем зажата
     для аккорда accord
     """
-    accord = models.ForeignKey(Accord, on_delete=models.CASCADE, verbose_name="Аккорд", related_name="lads")
+    accord = models.ForeignKey(Chord, on_delete=models.CASCADE, verbose_name="Аккорд", related_name="lads")
     string = models.IntegerField(default=1, verbose_name="Номер струны")
     lad = models.IntegerField(default=0, verbose_name="На каком ладу зажата",
                               help_text="-1 - не играется, 0 - открытая, 1-12 - номер лада")
@@ -74,33 +98,68 @@ class StringsInfo(models.Model):
 class Scheme(models.Model):
     """
     Схематический рисунок гитарного боя
-    или другая схема для урока/разбора
+    или другая схема для урока/разбора в виде ресунка
     """
-    code = models.CharField("Кодовое название", max_length=20)
+    code = models.CharField("Кодовое название", help_text="Позволяет указать, для какого именно урока этот рисунок",
+                            max_length=20, blank=True)
     inscription = models.CharField("Надпись", max_length=100, blank=True, null=True)
     image = models.ImageField("Изображение", upload_to='lesson_schemes/',
                               height_field=None, width_field=None, max_length=None)
 
     class Meta:
-        verbose_name = "Бой или схема"
-        verbose_name_plural = "Бои или схемы"
+        verbose_name = "Бой или схема (рисунок)"
+        verbose_name_plural = "Бои или схемы (рисунки)"
 
     def __str__(self):
         return f"{self.code} - {self.inscription}"
 
 
-class Sound(models.Model):
+class Beat(models.Model):
+    """
+    Класс, который хранит информацию об интерактивных боях.
+    Например, бой № 1 (четверка), будет записан как ['down', 'up', 'x', 'up'], duration = 2
+    """
+    code = models.CharField("Кодовое название", help_text="Позволяет указать, для какого именно урока этот бой",
+                            max_length=20, blank=True)
+    inscription = models.CharField("Надпись", max_length=100, blank=True, null=True)
+    duration = models.IntegerField("Длительность", choices=NOTE_DURATIONS)
+
+    class Meta:
+        verbose_name = "Интерактивный ритмический рисунок"
+        verbose_name_plural = "Интерактивные ритмические рисунки"
+
+    def __str__(self):
+        return f"{self.code} - {self.inscription} - duration {self.duration}"
+
+
+class Strike(models.Model):
+    """
+    Вид удара
+    """
+    beat = models.ForeignKey(Beat, on_delete=models.CASCADE, verbose_name="Ритмический рисунок", related_name="strikes")
+    strike = models.CharField(verbose_name="Удар", max_length=30, choices=ALLOWED_STRIKES)
+
+    class Meta:
+        verbose_name = "Удар"
+        verbose_name_plural = "Удары"
+
+    def __str__(self):
+        return self.strike
+
+
+class Song(models.Model): # TODO: rename to Song
     """
     Основной класс для песни, не зависимо от того, урок это или разбор.
     Содержит текст с markdown разметкой для отображения аккордов
     а также используемые ритмические бои и аккорды
     """
     lesson = models.ForeignKey(Lesson, verbose_name="Песня к...",
-                               on_delete=models.CASCADE, related_name="sounds")
+                               on_delete=models.CASCADE, related_name="songs")
     title = models.CharField("Название", max_length=200)
-    accords = models.ManyToManyField(Accord, verbose_name="Аккорды", blank=True)
+    chords = models.ManyToManyField(Chord, verbose_name="Аккорды", blank=True)
     schemes = models.ManyToManyField(
-        Scheme, verbose_name="Ритмические рисунки", blank=True)
+        Scheme, verbose_name="Ритмические рисунки (изображения)", blank=True)
+    beats = models.ManyToManyField(Beat, verbose_name="Интерактивные ритмические рисунки", blank=True)
     text = MarkdownxField("Текст песни", help_text="С аккордами и переносами строк")
     metronome = models.IntegerField("Метроном", default=0)
 
@@ -140,7 +199,7 @@ class UpdateInfo(models.Model):
     editedLessons = models.ManyToManyField(
         Lesson, verbose_name="Измененные уроки", blank=True)
     editedAccords = models.ManyToManyField(
-        Accord, verbose_name="Измененные аккорды", blank=True)
+        Chord, verbose_name="Измененные аккорды", blank=True)
 
     class Meta:
         verbose_name = "Информация об обновлении"
