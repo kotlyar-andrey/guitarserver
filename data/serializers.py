@@ -32,9 +32,9 @@ class SchemeSerializer(serializers.ModelSerializer):
 
 
 class SongSerializer(serializers.ModelSerializer):
-    chords = ChordSerializer(many=True, read_only=True)
+    chords = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     schemes = SchemeSerializer(many=True, read_only=True)
-    beats = BeatSerializer(many=True, read_only=True)
+    beats = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Song
