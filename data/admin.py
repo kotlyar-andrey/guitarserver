@@ -1,6 +1,6 @@
 from django.contrib import admin
 from markdownx.admin import MarkdownxModelAdmin
-from .models import Scheme, Lesson, Song, Addition, UpdateInfo,\
+from .models import Scheme, Lesson, Song, Addition, UpdatedSubjects,\
     Chord, StringsInfo, Strike, Beat
 
 
@@ -24,7 +24,7 @@ class StrikeInline(admin.TabularInline):
 
 @admin.register(Beat)
 class BeatAdmin(admin.ModelAdmin):
-    list_display = ("inscription", )
+    list_display = ("inscription", 'code', 'duration')
     inlines = [StrikeInline, ]
 
 
@@ -36,7 +36,8 @@ class LessonSchemeAdmin(admin.ModelAdmin):
 @admin.register(Song)
 class SongAdmin(MarkdownxModelAdmin):
     filter_horizontal = ('chords', 'schemes', 'beats')
-    list_display = ('title',)
+    list_display = ('title', 'lesson', 'metronome')
+    list_editable = ('metronome',)
 
 
 @admin.register(Addition)
@@ -52,6 +53,7 @@ class LessonAdmin(admin.ModelAdmin):
     list_filter = ('lesson_type', )
 
 
-@admin.register(UpdateInfo)
+
+@admin.register(UpdatedSubjects)
 class UpdateInfoAdmin(admin.ModelAdmin):
     list_display = ('version',)

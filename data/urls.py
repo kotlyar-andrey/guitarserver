@@ -1,6 +1,7 @@
 from django.urls import path
 
-from . views import LessonsList, LessonView, HowToPlayList, HowToPlayView, AccordsList, AccordView, BeatsList, BeatView
+from . views import LessonsList, LessonView, HowToPlayList, HowToPlayView, AccordsList, AccordView, BeatsList, \
+    BeatView, UpdateView, VersionView
 
 urlpatterns = [
     # get data:
@@ -12,4 +13,6 @@ urlpatterns = [
     path('chords/<int:pk>/', AccordView.as_view(), name='accord_view'),
     path('beats/', BeatsList.as_view(), name='beats_list'),
     path('beats/<int:pk>/', BeatView.as_view(), name='beat_view'),
+    path('update/', VersionView.as_view(), name='version_view'),
+    path('update/<int:version>/', UpdateView.as_view(), name='update_view')
 ]

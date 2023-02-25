@@ -188,17 +188,19 @@ class Addition(models.Model):
         return self.title
 
 
-class UpdateInfo(models.Model):
+class UpdatedSubjects(models.Model):
     """
-    Содержит информацию о том, какие уроки или аккорды были изменены,
+    Содержит информацию о том, какие уроки или аккорды были изменены или добавлены,
     а также версию данных.
-    Используется для отслеживания изменений в уроках или аккордах.
+    Используется для отслеживания изменений в уроках, аккордах или боях.
     """
     version = models.IntegerField("Версия данных", default=0)
-    editedLessons = models.ManyToManyField(
+    edited_lessons = models.ManyToManyField(
         Lesson, verbose_name="Измененные уроки", blank=True)
-    editedAccords = models.ManyToManyField(
+    edited_chords = models.ManyToManyField(
         Chord, verbose_name="Измененные аккорды", blank=True)
+    edited_beats = models.ManyToManyField(
+        Beat, verbose_name="Измененнные бои", blank=True)
 
     class Meta:
         verbose_name = "Информация об обновлении"
