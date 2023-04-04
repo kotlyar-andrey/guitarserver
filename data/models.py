@@ -7,6 +7,11 @@ LESSON_TYPES = (
     (1, 'Разбор'),
 )
 
+BEAT_TYPES = (
+    (0, 'Бой'),
+    (1, 'Перебор'),
+)
+
 NOTE_DURATIONS = (
     (0, '1'),
     (1, '1/2'),
@@ -20,7 +25,13 @@ ALLOWED_STRIKES = (
     ('down', 'Вниз'),
     ('up', 'Вверх'),
     ('x', 'Щелчок'),
-    ('pause', 'Пауза')
+    ('pause', 'Пауза'),
+    ('t', 'Тоника'),
+    ('1', '1'),
+    ('2', '2'),
+    ('3', '3'),
+    ('4', '4'),
+    ('downup', 'Вниз-вверх'),
 )
 
 
@@ -118,6 +129,7 @@ class Beat(models.Model):
     Класс, который хранит информацию об интерактивных боях.
     Например, бой № 1 (четверка), будет записан как ['down', 'up', 'x', 'up'], duration = 2
     """
+    beat_type = models.IntegerField("Вид боя", choices=BEAT_TYPES, default=0)
     code = models.CharField("Кодовое название", help_text="Позволяет указать, для какого именно урока этот бой",
                             max_length=20, blank=True)
     inscription = models.CharField("Надпись", max_length=100, blank=True, null=True)
@@ -128,7 +140,7 @@ class Beat(models.Model):
         verbose_name_plural = "Интерактивные ритмические рисунки"
 
     def __str__(self):
-        return f"{self.code} - {self.inscription} - duration {self.duration}"
+        return f"{self.beat_type}, {self.code} - {self.inscription} - duration {self.duration}"
 
 
 class Strike(models.Model):

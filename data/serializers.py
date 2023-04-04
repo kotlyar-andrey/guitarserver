@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from . models import Lesson, Song, Addition, Chord, StringsInfo, Scheme, Strike, Beat
+from . models import Lesson, Song, Addition, Chord, StringsInfo, Scheme, Beat
 
 
 class StringInfoSerializer(serializers.ModelSerializer):
@@ -22,7 +22,7 @@ class BeatSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Beat
-        fields = ('pk', 'inscription', 'duration', 'strikes',)
+        fields = ('pk', 'beat_type', 'inscription', 'duration', 'strikes',)
 
 
 class SchemeSerializer(serializers.ModelSerializer):

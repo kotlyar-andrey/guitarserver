@@ -25,6 +25,7 @@ class StrikeInline(admin.TabularInline):
 @admin.register(Beat)
 class BeatAdmin(admin.ModelAdmin):
     list_display = ("inscription", 'code', 'duration')
+    list_filter = ('beat_type',)
     inlines = [StrikeInline, ]
 
 
