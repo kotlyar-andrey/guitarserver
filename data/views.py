@@ -3,12 +3,19 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from . models import Lesson, Chord, Beat, UpdatedSubjects
-from . serializers import LessonSerializer, ChordSerializer, BeatSerializer
+from . serializers import LessonSerializer, ChordSerializer, BeatSerializer,\
+    SimpleLessonSerializer, FullLessonSerializer
 
 
 class LessonsList(generics.ListAPIView):
     queryset = Lesson.objects.filter(lesson_type=0)
     serializer_class = LessonSerializer
+    permission_classes = (AllowAny,)
+
+
+class SimpleLessonsList(generics.ListAPIView):
+    queryset = Lesson.objects.filter(lesson_type=0)
+    serializer_class = SimpleLessonSerializer
     permission_classes = (AllowAny,)
 
 
@@ -18,15 +25,33 @@ class LessonView(generics.RetrieveAPIView):
     permission_classes = (AllowAny,)
 
 
+class FullLessonView(generics.RetrieveAPIView):
+    queryset = Lesson.objects.filter(lesson_type=0)
+    serializer_class = FullLessonSerializer
+    permission_classes = (AllowAny,)
+
+
 class HowToPlayList(generics.ListAPIView):
     queryset = Lesson.objects.filter(lesson_type=1)
     serializer_class = LessonSerializer
     permission_classes = (AllowAny,)
 
 
+class SimpleHowToPlayList(generics.ListAPIView):
+    queryset = Lesson.objects.filter(lesson_type=1)
+    serializer_class = SimpleLessonSerializer
+    permission_classes = (AllowAny,)
+
+
 class HowToPlayView(generics.RetrieveAPIView):
     queryset = Lesson.objects.filter(lesson_type=1)
     serializer_class = LessonSerializer
+    permission_classes = (AllowAny,)
+
+
+class FullHowToPlayView(generics.RetrieveAPIView):
+    queryset = Lesson.objects.filter(lesson_type=1)
+    serializer_class = FullLessonSerializer
     permission_classes = (AllowAny,)
 
 
