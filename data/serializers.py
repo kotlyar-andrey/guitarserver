@@ -74,7 +74,7 @@ class SimpleLessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ('pk', 'title', 'songs')
+        fields = ('pk', 'title', 'start_lesson', 'songs')
 
 
 class FullSongSerializer(serializers.ModelSerializer):
