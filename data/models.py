@@ -108,13 +108,15 @@ class StringsInfo(models.Model):
 class Scheme(models.Model):
     """
     Схематический рисунок гитарного боя
-    или другая схема для урока/разбора в виде ресунка
+    или другая схема для урока/разбора в виде рисунка
     """
     code = models.CharField("Кодовое название", help_text="Позволяет указать, для какого именно урока этот рисунок",
                             max_length=20, blank=True)
     inscription = models.CharField("Надпись", max_length=100, blank=True, null=True)
+    height = models.PositiveIntegerField(blank=True, null=True)
+    width = models.PositiveIntegerField(blank=True, null=True)
     image = models.ImageField("Изображение", upload_to='lesson_schemes/',
-                              height_field=None, width_field=None, max_length=None)
+                              height_field="height", width_field="width", max_length=None)
 
     class Meta:
         verbose_name = "Бой или схема (рисунок)"

@@ -28,7 +28,7 @@ class BeatSerializer(serializers.ModelSerializer):
 class SchemeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Scheme
-        fields = ('pk', 'inscription', 'image')
+        fields = ('pk', 'inscription', 'image', 'height', 'width')
 
 
 class SongSerializer(serializers.ModelSerializer):
