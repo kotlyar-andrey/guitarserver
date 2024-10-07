@@ -6,6 +6,7 @@ __pycache__/
 local_settings.py
 local_settings_dev.py
 db.sqlite3
+guitar0.db
 db.sqlite3-journal
 media
 static
@@ -22,6 +23,7 @@ guitarserver/staticfiles/
 
 # Distribution / packaging
 .Python
+.DS_Store/
 build/
 develop-eggs/
 dist/
