@@ -18,8 +18,16 @@ class Register(APIView):
         purchases = request.data.get("purchases")
         if user_id:
             user, created = MobileUser.objects.get_or_create(uuid=user_id, os=os)
-            if purchases:
+            if purchases and isinstance(purchases, list):
                 for purchase in purchases:
                     payment = Payment(mobile_user=user, info=purchase)
                     payment.save()
+        return Response(status=status.HTTP_200_OK)
+
+
+class NewPurchase(APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        print("data: ", request.data)
         return Response(status=status.HTTP_200_OK)

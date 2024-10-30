@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'markdownx',
+    'django_json_widget',
     'data',
     'accounts',
     'users',
