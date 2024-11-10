@@ -101,3 +101,8 @@ venv.bak/
 cython_debug/
 
 .idea/
+*guitar*.json
+*secret*.json
+*.p12
+*config.py
+*.DS_Store*

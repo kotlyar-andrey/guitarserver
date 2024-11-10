@@ -18,3 +18,8 @@ class MobileUserAdmin(admin.ModelAdmin):
     list_filter = ('os',)
     inlines = [PaymentInline]
 
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ("product_type", "product_id", "created_on", "checked")
+    list_filter = ("product_type", "product_id", "created_on", "checked")
